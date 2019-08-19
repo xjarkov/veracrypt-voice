@@ -55,16 +55,16 @@ def nextName(name):
 
 
 def main():
-    path = os.getcwd() + "/Precise"
+    path = os.getcwd() + "/Precise/recordings"
 
     while True:
         line = sys.stdin.readline().rstrip()
         if (line == "wake"):
             nameTemplate = "WakeWord#"
-            os.chdir(path + "/Wakeword")
+            os.chdir(path + "/wake-word")
         elif (line == "notwake"):
             nameTemplate = "NotWakeWord#"
-            os.chdir(path + "/Notwakeword")
+            os.chdir(path + "/not-wake-word")
         else:
             continue
 

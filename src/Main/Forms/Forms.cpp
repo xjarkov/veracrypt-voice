@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version Aug 18 2019)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -3585,8 +3585,8 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_staticText73->Wrap( -1 );
 	sbSizer49->Add( m_staticText73, 0, wxALL, 5 );
 
-	m_button66 = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Train Model"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer49->Add( m_button66, 0, wxALL, 5 );
+	TrainModelButton = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Train Model"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer49->Add( TrainModelButton, 0, wxALL, 5 );
 
 	m_staticText75 = new wxStaticText( sbSizer49->GetStaticBox(), wxID_ANY, _("Press to start listening in safe mode (do not say wake word):"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText75->Wrap( -1 );
@@ -3626,7 +3626,7 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	// Connect Events
 	WakeRecordButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnWakeRecordButtonClick ), NULL, this );
 	NonWakeRecordButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnNonWakeRecordButtonClick ), NULL, this );
-	m_button66->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
+	TrainModelButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	m_button67->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 }
 
@@ -3635,7 +3635,7 @@ VoiceDialogBase::~VoiceDialogBase()
 	// Disconnect Events
 	WakeRecordButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnWakeRecordButtonClick ), NULL, this );
 	NonWakeRecordButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnNonWakeRecordButtonClick ), NULL, this );
-	m_button66->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
+	TrainModelButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	m_button67->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 
 }

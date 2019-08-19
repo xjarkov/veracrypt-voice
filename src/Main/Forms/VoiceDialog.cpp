@@ -53,12 +53,17 @@ namespace VeraCrypt
             input.flush();
         }
     }
-    //ss
+
     void VoiceDialog::OnPurgeFilesButtonClick(wxCommandEvent &event)
     {
         ConfirmResetDialog dialog(this);
         dialog.ShowModal();
     }
 
-
+    //p
+    void VoiceDialog::OnTrainModelButtonClick(wxCommandEvent &event)
+    {
+        boost::process::child c("python3 ./Precise/train.py -e 60 model.net recordings/");
+        c.wait();
+    }
 }

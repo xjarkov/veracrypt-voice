@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version Aug 18 2019)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -1110,7 +1110,7 @@ namespace VeraCrypt
 			wxStaticText* m_staticText72;
 			wxButton* NonWakeRecordButton;
 			wxStaticText* m_staticText73;
-			wxButton* m_button66;
+			wxButton* TrainModelButton;
 			wxStaticText* m_staticText75;
 			wxButton* m_button68;
 			wxCheckBox* m_checkBox53;
