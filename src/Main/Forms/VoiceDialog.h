@@ -20,6 +20,9 @@ namespace VeraCrypt
         void OnNonWakeRecordButtonClick(wxCommandEvent& event);
         void OnPurgeFilesButtonClick(wxCommandEvent& event);
         void OnTrainModelButtonClick(wxCommandEvent& event);
+        void OnStartModelButtonClick(wxCommandEvent& event);
+
+        const wxWindow *parent;
         bool isRecordingWake = false;
         bool isRecordingNonWake = false;
         boost::process::opstream input;

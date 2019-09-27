@@ -14,6 +14,7 @@ namespace VeraCrypt
         Layout();
         Fit();
         Center();
+        this->parent = parent;
     }
 
     void VoiceDialog::OnWakeRecordButtonClick(wxCommandEvent& event)
@@ -60,10 +61,17 @@ namespace VeraCrypt
         dialog.ShowModal();
     }
 
-    //p
+    //s
     void VoiceDialog::OnTrainModelButtonClick(wxCommandEvent &event)
     {
         boost::process::child c("python3 ./Precise/train.py -e 60 model.net recordings/");
         c.wait();
+    }
+
+    void VoiceDialog::OnStartModelButtonClick(wxCommandEvent &event)
+    {
+        parent->listener = std::make_unique<boost::process::child>(
+                    "python3 ./Precise/listen.py",
+                    boost::process::std_in < input);
     }
 }

@@ -787,7 +787,7 @@ namespace VeraCrypt
 
 	void MainFrame::OnVoiceDismountMenuItemSelected (wxCommandEvent& event)
 	{
-		VoiceDialog dialog (this);
+        VoiceDialog dialog(this);
 		dialog.ShowModal();
 	}
 

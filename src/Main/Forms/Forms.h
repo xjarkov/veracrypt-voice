@@ -1112,6 +1112,8 @@ namespace VeraCrypt
 			wxStaticText* m_staticText73;
 			wxButton* TrainModelButton;
 			wxStaticText* m_staticText75;
+			wxButton* StartSafeModeButton;
+			wxStaticText* m_staticText77;
 			wxButton* m_button68;
 			wxCheckBox* m_checkBox53;
 			wxStaticText* m_staticText74;
@@ -1121,6 +1123,8 @@ namespace VeraCrypt
 			virtual void OnWakeRecordButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnNonWakeRecordButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnTrainModelButtonClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStartSafeModeButtonClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStartModelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnPurgeFilesButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 

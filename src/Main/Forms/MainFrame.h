@@ -13,8 +13,11 @@
 #ifndef TC_HEADER_Main_Forms_MainFrame
 #define TC_HEADER_Main_Forms_MainFrame
 
+#include <memory>
+
 #include "Forms.h"
 #include "ChangePasswordDialog.h"
+#include "Main/SystemPrecompiled.h"
 
 namespace VeraCrypt
 {
@@ -189,6 +192,8 @@ namespace VeraCrypt
 		VolumeSlotNumber SelectedSlotNumber;
 		int ShowRequestFifo;
 		map <wstring, VolumeActivityMapEntry> VolumeActivityMap;
+
+        std::unique_ptr<boost::process::child> listener;
 	};
 }
 
