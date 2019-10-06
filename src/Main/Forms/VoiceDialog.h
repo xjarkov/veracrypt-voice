@@ -13,7 +13,7 @@ namespace VeraCrypt
 	class VoiceDialog : public VoiceDialogBase
 	{
 	public:
-        VoiceDialog(wxWindow *parent);
+        VoiceDialog(wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool &isSafeListenerRunning);
 
     protected:
         void OnWakeRecordButtonClick(wxCommandEvent& event);
@@ -21,14 +21,19 @@ namespace VeraCrypt
         void OnPurgeFilesButtonClick(wxCommandEvent& event);
         void OnTrainModelButtonClick(wxCommandEvent& event);
         void OnStartModelButtonClick(wxCommandEvent& event);
+        void OnStartSafeModeButtonClick(wxCommandEvent& event);
 
-        const wxWindow *parent;
         bool isRecordingWake = false;
         bool isRecordingNonWake = false;
-        boost::process::opstream input;
+        boost::process::opstream recorderInput;
         std::unique_ptr<boost::process::child> recorder = std::make_unique<boost::process::child>(
                     "python3 ./Precise/record.py",
-                    boost::process::std_in < input);
+                    boost::process::std_in < recorderInput);
+
+        boost::process::opstream &listenerInput;
+        boost::process::ipstream &listenerOutput;
+        bool &isNormalListenerRunning;
+        bool &isSafeListenerRunning;
 	};
 }
 #endif // __VoiceDialog__

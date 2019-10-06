@@ -55,7 +55,7 @@ def nextName(name):
 
 
 def main():
-    path = os.getcwd() + "/Precise/recordings"
+    path = os.getcwd() + "/Precise/model"
 
     while True:
         line = sys.stdin.readline().rstrip()

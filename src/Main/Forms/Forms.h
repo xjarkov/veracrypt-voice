@@ -1114,7 +1114,7 @@ namespace VeraCrypt
 			wxStaticText* m_staticText75;
 			wxButton* StartSafeModeButton;
 			wxStaticText* m_staticText77;
-			wxButton* m_button68;
+			wxButton* StartStopListeningButton;
 			wxCheckBox* m_checkBox53;
 			wxStaticText* m_staticText74;
 			wxButton* m_button67;

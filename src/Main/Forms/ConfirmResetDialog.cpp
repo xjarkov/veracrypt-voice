@@ -15,9 +15,10 @@ namespace VeraCrypt
     void ConfirmResetDialog::OnOkButtonClick (wxCommandEvent &event)
     {
         int ret;
-        ret = system("exec rm -r ./Precise/recordings/wake-word/*");
-        ret = system("exec rm -r ./Precise/recordings/not-wake-word/*");
-        ret = system("exec rm ./Precise/*model*");
+        ret = system("exec rm -r ./Precise/model/wake-word/*");
+        ret = system("exec rm -r ./Precise/model/not-wake-word/*");
+        ret = system("exec rm -r ./Precise/model.*");
+        //ret = system("exec rm ./Precise/model.net");
 
         Close();
         //only for supressing warning

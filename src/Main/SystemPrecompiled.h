@@ -33,3 +33,4 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <boost/process.hpp>
+#include <boost/thread.hpp>

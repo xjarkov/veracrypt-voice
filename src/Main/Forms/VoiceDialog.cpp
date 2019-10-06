@@ -8,13 +8,26 @@
 
 namespace VeraCrypt
 {
-    VoiceDialog::VoiceDialog (wxWindow *parent)
-        : VoiceDialogBase (parent)
+    VoiceDialog::VoiceDialog (wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool& isSafeListenerRunning)
+        : VoiceDialogBase (parent),
+        listenerInput(input),
+        listenerOutput(output),
+        isNormalListenerRunning(isNormalListenerRunning),
+        isSafeListenerRunning(isSafeListenerRunning)
     {
+        if (isNormalListenerRunning) {
+            StartStopListeningButton->SetLabel(wxString::FromAscii("Stop listening"));
+        } else {
+            StartStopListeningButton->SetLabel(wxString::FromAscii("Start listening"));
+        }
+        if (isSafeListenerRunning) {
+            StartSafeModeButton->SetLabel(wxString::FromAscii("Stop safe mode"));
+        } else {
+            StartSafeModeButton->SetLabel(wxString::FromAscii("Start safe mode"));
+        }
         Layout();
         Fit();
         Center();
-        this->parent = parent;
     }
 
     void VoiceDialog::OnWakeRecordButtonClick(wxCommandEvent& event)
@@ -26,13 +39,13 @@ namespace VeraCrypt
         if (isRecordingWake) {
             isRecordingWake = false;
             WakeRecordButton->SetLabel(wxString::FromAscii("Record Wake Word"));
-            input << "terminate\n";
-            input.flush();
+            recorderInput << "terminate\n";
+            recorderInput.flush();
         } else {
             isRecordingWake = true;
             WakeRecordButton->SetLabel(wxString::FromAscii("Press to stop..."));
-            input << "wake\n";
-            input.flush();
+            recorderInput << "wake\n";
+            recorderInput.flush();
         }
     }
 
@@ -45,13 +58,13 @@ namespace VeraCrypt
         if (isRecordingNonWake) {
             isRecordingNonWake = false;
             NonWakeRecordButton->SetLabel(wxString::FromAscii("Record Non-Wake Word"));
-            input << "terminate\n";
-            input.flush();
+            recorderInput << "terminate\n";
+            recorderInput.flush();
         } else {
             isRecordingNonWake = true;
             NonWakeRecordButton->SetLabel(wxString::FromAscii("Press to stop..."));
-            input << "notwake\n";
-            input.flush();
+            recorderInput << "notwake\n";
+            recorderInput.flush();
         }
     }
 
@@ -61,17 +74,41 @@ namespace VeraCrypt
         dialog.ShowModal();
     }
 
-    //s
     void VoiceDialog::OnTrainModelButtonClick(wxCommandEvent &event)
     {
-        boost::process::child c("python3 ./Precise/train.py -e 60 model.net recordings/");
+        if (isNormalListenerRunning || isSafeListenerRunning) {
+            return;
+        }
+        boost::process::child c("python3 ./Precise/train.py -e 60 model.net model/");
         c.wait();
     }
 
     void VoiceDialog::OnStartModelButtonClick(wxCommandEvent &event)
     {
-        parent->listener = std::make_unique<boost::process::child>(
-                    "python3 ./Precise/listen.py",
-                    boost::process::std_in < input);
+        if (isSafeListenerRunning) {
+            return;
+        }
+        isNormalListenerRunning = !isNormalListenerRunning;
+        if (isNormalListenerRunning) {
+            StartStopListeningButton->SetLabel(wxString::FromAscii("Stop listening"));
+            listenerInput << "start\n";
+        } else {
+            StartStopListeningButton->SetLabel(wxString::FromAscii("Start listening"));
+            listenerInput << "stop\n";
+        }
+        listenerInput.flush();
+    }
+
+    void VoiceDialog::OnStartSafeModeButtonClick(wxCommandEvent &event)
+    {
+        if (isNormalListenerRunning) {
+            return;
+        }
+        isSafeListenerRunning = !isSafeListenerRunning;
+        if (isSafeListenerRunning) {
+            StartSafeModeButton->SetLabel(wxString::FromAscii("Stop safe mode"));
+        } else {
+            StartSafeModeButton->SetLabel(wxString::FromAscii("Start safe mode"));
+        }
     }
 }

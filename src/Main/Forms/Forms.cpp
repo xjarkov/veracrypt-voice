@@ -3595,12 +3595,12 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	StartSafeModeButton = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Start safe mode"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer49->Add( StartSafeModeButton, 0, wxALL, 5 );
 
-	m_staticText77 = new wxStaticText( sbSizer49->GetStaticBox(), wxID_ANY, _("Press to start listening"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText77 = new wxStaticText( sbSizer49->GetStaticBox(), wxID_ANY, _("Press to start/stop listening"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText77->Wrap( -1 );
 	sbSizer49->Add( m_staticText77, 0, wxALL, 5 );
 
-	m_button68 = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Start model"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer49->Add( m_button68, 0, wxALL, 5 );
+	StartStopListeningButton = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Start listening"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer49->Add( StartStopListeningButton, 0, wxALL, 5 );
 
 	m_checkBox53 = new wxCheckBox( sbSizer49->GetStaticBox(), wxID_ANY, _("Start Voice Dismount on VeraCrypt start"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer49->Add( m_checkBox53, 0, wxALL, 5 );
@@ -3635,7 +3635,7 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	NonWakeRecordButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnNonWakeRecordButtonClick ), NULL, this );
 	TrainModelButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	StartSafeModeButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartSafeModeButtonClick ), NULL, this );
-	m_button68->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
+	StartStopListeningButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
 	m_button67->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 }
 
@@ -3646,7 +3646,7 @@ VoiceDialogBase::~VoiceDialogBase()
 	NonWakeRecordButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnNonWakeRecordButtonClick ), NULL, this );
 	TrainModelButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	StartSafeModeButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartSafeModeButtonClick ), NULL, this );
-	m_button68->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
+	StartStopListeningButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
 	m_button67->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 
 }

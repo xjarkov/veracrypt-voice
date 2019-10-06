@@ -66,6 +66,8 @@ namespace VeraCrypt
 		void InitMessageFilter ();
 		void InitPreferences ();
 		void InitTaskBarIcon ();
+        void CreateListenerHandler();
+        void listenerHandler();
 		bool IsFreeSlotSelected () const { return SlotListCtrl->GetSelectedItemCount() == 1 && Gui->GetListCtrlSubItemText (SlotListCtrl, SelectedItemIndex, ColumnPath).empty(); }
 		bool IsMountedSlotSelected () const { return SlotListCtrl->GetSelectedItemCount() == 1 && !Gui->GetListCtrlSubItemText (SlotListCtrl, SelectedItemIndex, ColumnPath).empty(); }
 		void LoadFavoriteVolumes ();
@@ -193,7 +195,15 @@ namespace VeraCrypt
 		int ShowRequestFifo;
 		map <wstring, VolumeActivityMapEntry> VolumeActivityMap;
 
-        std::unique_ptr<boost::process::child> listener;
+        boost::process::ipstream listenerOutput;
+        boost::process::opstream listenerInput;
+        std::unique_ptr<boost::process::child> listener = std::make_unique<boost::process::child>(
+                    "python3 ./Precise/listen.py model.net",
+                    boost::process::std_out > listenerOutput,
+                    boost::process::std_in < listenerInput);
+
+        bool isNormalListenerRunning = false;
+        bool isSafeListenerRunning = false;
 	};
 }
 

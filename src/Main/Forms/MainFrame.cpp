@@ -12,6 +12,9 @@
 
 #include "System.h"
 
+#include <string>
+#include <future>
+
 #ifdef TC_UNIX
 #include <fcntl.h>
 #include <unistd.h>
@@ -100,6 +103,7 @@ namespace VeraCrypt
 		Connect( wxID_ANY, wxEVT_COMMAND_PREF_UPDATED, wxCommandEventHandler( MainFrame::OnPreferencesUpdated ) );
 		Connect( wxID_ANY, wxEVT_COMMAND_OPEN_VOLUME_REQUEST, wxCommandEventHandler( MainFrame::OnOpenVolumeSystemRequest ) );
 
+        //CreateListenerHandler();
 	}
 
 	MainFrame::~MainFrame ()
@@ -602,6 +606,24 @@ namespace VeraCrypt
 		ShowTaskBarIcon (GetPreferences().BackgroundTaskEnabled);
 	}
 
+    void MainFrame::CreateListenerHandler()
+    {
+        auto a = std::async(std::launch::async, &MainFrame::listenerHandler, this);
+    }
+
+    void MainFrame::listenerHandler()
+    {
+        std::string output;
+        while (1) {
+            std::cout << "Getline" << std::endl;
+            std::getline(listenerOutput, output);
+            std::cout << output << std::endl;
+            if (!output.compare("activated")) {
+                Gui->DismountAllVolumes();
+            }
+        }
+    }
+
 	void MainFrame::LoadFavoriteVolumes ()
 	{
 		typedef pair <int, FavoriteVolume> FavMapPair;
@@ -787,7 +809,7 @@ namespace VeraCrypt
 
 	void MainFrame::OnVoiceDismountMenuItemSelected (wxCommandEvent& event)
 	{
-        VoiceDialog dialog(this);
+        VoiceDialog dialog(this, listenerInput, listenerOutput, isNormalListenerRunning, isSafeListenerRunning);
 		dialog.ShowModal();
 	}
 
@@ -1002,7 +1024,7 @@ namespace VeraCrypt
 
 		case Hotkey::Id::DismountAll:
 		case Hotkey::Id::DismountAllWipeCache:
-			{
+            {dialogdialog
 				if (event.GetId() == Hotkey::Id::DismountAllWipeCache)
 					WipeCache();
 
