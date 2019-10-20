@@ -26,6 +26,7 @@ namespace VeraCrypt
         } else {
             StartSafeModeButton->SetLabel(wxString::FromAscii("Start safe mode"));
         }
+        this->showVisual = false;
         Layout();
         Fit();
         Center();
@@ -80,7 +81,7 @@ namespace VeraCrypt
         if (isNormalListenerRunning || isSafeListenerRunning) {
             return;
         }
-        boost::process::child c("python3 ./Precise/train.py -e 60 model.net model/");
+        boost::process::child c("python3 ./Precise/train.py -e 250 model.net model/");
         c.wait();
     }
 
@@ -91,14 +92,15 @@ namespace VeraCrypt
         }
         isNormalListenerRunning = !isNormalListenerRunning;
         if (isNormalListenerRunning) {
-//            listener = std::make_unique<boost::process::child>(
-//                                            "python3 ./Precise/listen.py model_ahoj.pb",
-//                                            boost::process::std_in < listenerInput);
+            if (showVisual) {
+                listenerInput << "start normal visual\n";
+            } else {
+                listenerInput << "start normal\n";
+            }
             StartStopListeningButton->SetLabel(wxString::FromAscii("Stop listening"));
-            listenerInput << "start\n";
         } else {
-            StartStopListeningButton->SetLabel(wxString::FromAscii("Start listening"));
             listenerInput << "stop\n";
+            StartStopListeningButton->SetLabel(wxString::FromAscii("Start listening"));
         }
         listenerInput.flush();
     }
@@ -110,9 +112,27 @@ namespace VeraCrypt
         }
         isSafeListenerRunning = !isSafeListenerRunning;
         if (isSafeListenerRunning) {
+            if (showVisual) {
+                listenerInput << "start safe visual\n";
+            } else {
+                listenerInput << "start safe\n";
+            }
             StartSafeModeButton->SetLabel(wxString::FromAscii("Stop safe mode"));
         } else {
+            listenerInput << "stop\n";
             StartSafeModeButton->SetLabel(wxString::FromAscii("Start safe mode"));
         }
+        listenerInput.flush();
+    }
+
+    void VoiceDialog::OnShowVisualCheckBoxCheck(wxCommandEvent &event)
+    {
+        showVisual = event.IsChecked();
+    }
+
+    void VoiceDialog::OnConvertButtonClick(wxCommandEvent &event)
+    {
+        boost::process::child c("python3 ./Precise/convert.py model.net");
+        c.wait();
     }
 }

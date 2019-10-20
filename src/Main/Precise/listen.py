@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
-from os.path import join
+import os.path
 import os
 import sys
 
@@ -40,8 +40,16 @@ def main():
     args = create_parser(usage).parse_args()
     os.chdir(os.getcwd() + "/Precise")
 
-    def on_activation():
+    def on_activation_normal():
         print("activated\n", flush=True)
+
+    def on_activation_safe():
+        global chunk_num
+        nm = join(args.save_dir, args.save_prefix + session_id + '.' + str(chunk_num) + '.wav')
+        save_audio(nm, audio_buffer)
+        print()
+        print('Saved to ' + nm + '.')
+        chunk_num += 1
 
     def on_prediction(conf):
         max_width = 80
@@ -49,7 +57,7 @@ def main():
         units = int(round(conf * width))
         bar = 'X' * units + '-' * (width - units)
         cutoff = round((1.0 - args.sensitivity) * width)
-        print(bar[:cutoff] + bar[cutoff:].replace('X', 'x'))
+        print(bar[:cutoff] + bar[cutoff:].replace('X', 'x') + "\n", flush=True)
 
     def get_prediction(chunk):
         nonlocal audio_buffer
@@ -59,12 +67,27 @@ def main():
 
     while True:
         line = sys.stdin.readline().rstrip()
-        if (line == "start"):
-            listener = Listener(args.model, args.chunk_size)
-            audio_buffer = np.zeros(listener.pr.buffer_samples, dtype=float)
+
+        if ("start" in line):
+            if (os.path.isfile("./model.pb")):
+                listener = Listener("model.pb", args.chunk_size)
+            else:
+                listener = Listener("model.net", args.chunk_size)
             engine = ListenerEngine(listener, args.chunk_size)
-            engine.get_prediction = get_prediction;
-            runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation)
+            if ("visual" not in line):
+                if (line == "start normal"):
+                    runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation_normal)
+                elif (line == "start safe"):
+                    runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation_safe)
+            else:
+                if (line == "start normal visual"):
+                    audio_buffer = np.zeros(listener.pr.buffer_samples, dtype=float)
+                    engine.get_prediction = get_prediction;
+                    runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation_normal, on_prediction = on_prediction)
+                elif (line == "start safe visual"):
+                    audio_buffer = np.zeros(listener.pr.buffer_samples, dtype=float)
+                    engine.get_prediction = get_prediction;
+                    runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation_safe, on_prediction = on_prediction)
             runner.start()
         elif (line == "stop"):
             runner.stop()

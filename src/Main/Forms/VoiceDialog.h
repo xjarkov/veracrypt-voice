@@ -16,12 +16,14 @@ namespace VeraCrypt
         VoiceDialog(wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool &isSafeListenerRunning, std::unique_ptr<boost::process::child> &listener);
 
     protected:
-        void OnWakeRecordButtonClick(wxCommandEvent& event);
-        void OnNonWakeRecordButtonClick(wxCommandEvent& event);
-        void OnPurgeFilesButtonClick(wxCommandEvent& event);
-        void OnTrainModelButtonClick(wxCommandEvent& event);
-        void OnStartModelButtonClick(wxCommandEvent& event);
-        void OnStartSafeModeButtonClick(wxCommandEvent& event);
+        void OnWakeRecordButtonClick(wxCommandEvent &event);
+        void OnNonWakeRecordButtonClick(wxCommandEvent &event);
+        void OnPurgeFilesButtonClick(wxCommandEvent &event);
+        void OnTrainModelButtonClick(wxCommandEvent &event);
+        void OnStartModelButtonClick(wxCommandEvent &event);
+        void OnStartSafeModeButtonClick(wxCommandEvent &event);
+        void OnShowVisualCheckBoxCheck(wxCommandEvent &event);
+        void OnConvertButtonClick(wxCommandEvent &event);
 
         bool isRecordingWake = false;
         bool isRecordingNonWake = false;
@@ -35,6 +37,7 @@ namespace VeraCrypt
         bool &isNormalListenerRunning;
         bool &isSafeListenerRunning;
         std::unique_ptr<boost::process::child> &listener;
+        bool showVisual;
 	};
 }
 #endif // __VoiceDialog__

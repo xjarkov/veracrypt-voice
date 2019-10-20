@@ -498,7 +498,7 @@ namespace VeraCrypt
 			virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
 			virtual void OnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOptionsButtonClick( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnReadOnlyCheckBoxClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void ReadOnlyCheckBoxOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnProtectionCheckBoxClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnProtectionHyperlinkClick( wxHyperlinkEvent& event ) { event.Skip(); }
 			virtual void OnNoFilesystemCheckBoxClick( wxCommandEvent& event ) { event.Skip(); }
@@ -1115,7 +1115,10 @@ namespace VeraCrypt
 			wxButton* StartSafeModeButton;
 			wxStaticText* m_staticText77;
 			wxButton* StartStopListeningButton;
-			wxCheckBox* m_checkBox53;
+			wxStaticText* m_staticText78;
+			wxButton* ConvertButton;
+			wxCheckBox* ShowVisual
+			;
 			wxStaticText* m_staticText74;
 			wxButton* m_button67;
 
@@ -1125,6 +1128,8 @@ namespace VeraCrypt
 			virtual void OnTrainModelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStartSafeModeButtonClick( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStartModelButtonClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnConvertButtonClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnShowVisualCheckBoxCheck( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnPurgeFilesButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 

@@ -1677,7 +1677,7 @@ MountOptionsDialogBase::MountOptionsDialogBase( wxWindow* parent, wxWindowID id,
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MountOptionsDialogBase::OnInitDialog ) );
 	OKButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnOKButtonClick ), NULL, this );
 	OptionsButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnOptionsButtonClick ), NULL, this );
-	ReadOnlyCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnReadOnlyCheckBoxClick ), NULL, this );
+	ReadOnlyCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::ReadOnlyCheckBoxOnCheckBox ), NULL, this );
 	ProtectionCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnProtectionCheckBoxClick ), NULL, this );
 	ProtectionHyperlinkCtrl->Connect( wxEVT_COMMAND_HYPERLINK, wxHyperlinkEventHandler( MountOptionsDialogBase::OnProtectionHyperlinkClick ), NULL, this );
 	NoFilesystemCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnNoFilesystemCheckBoxClick ), NULL, this );
@@ -1690,7 +1690,7 @@ MountOptionsDialogBase::~MountOptionsDialogBase()
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MountOptionsDialogBase::OnInitDialog ) );
 	OKButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnOKButtonClick ), NULL, this );
 	OptionsButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnOptionsButtonClick ), NULL, this );
-	ReadOnlyCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnReadOnlyCheckBoxClick ), NULL, this );
+	ReadOnlyCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::ReadOnlyCheckBoxOnCheckBox ), NULL, this );
 	ProtectionCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnProtectionCheckBoxClick ), NULL, this );
 	ProtectionHyperlinkCtrl->Disconnect( wxEVT_COMMAND_HYPERLINK, wxHyperlinkEventHandler( MountOptionsDialogBase::OnProtectionHyperlinkClick ), NULL, this );
 	NoFilesystemCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MountOptionsDialogBase::OnNoFilesystemCheckBoxClick ), NULL, this );
@@ -3576,7 +3576,7 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	sbSizer48->Add( NonWakeRecordButton, 0, wxALL, 5 );
 
 
-	bSizer167->Add( sbSizer48, 1, wxEXPAND, 5 );
+	bSizer167->Add( sbSizer48, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizer49;
 	sbSizer49 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Model") ), wxVERTICAL );
@@ -3602,11 +3602,20 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	StartStopListeningButton = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Start listening"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer49->Add( StartStopListeningButton, 0, wxALL, 5 );
 
-	m_checkBox53 = new wxCheckBox( sbSizer49->GetStaticBox(), wxID_ANY, _("Start Voice Dismount on VeraCrypt start"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer49->Add( m_checkBox53, 0, wxALL, 5 );
+	m_staticText78 = new wxStaticText( sbSizer49->GetStaticBox(), wxID_ANY, _("Press to convert to TensorFlow model"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText78->Wrap( -1 );
+	sbSizer49->Add( m_staticText78, 0, wxALL, 5 );
+
+	ConvertButton = new wxButton( sbSizer49->GetStaticBox(), wxID_ANY, _("Convert"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer49->Add( ConvertButton, 0, wxALL, 5 );
+
+	ShowVisual
+	= new wxCheckBox( sbSizer49->GetStaticBox(), wxID_ANY, _("Show visual interpretation of listener"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer49->Add( ShowVisual
+	, 0, wxALL, 5 );
 
 
-	bSizer167->Add( sbSizer49, 1, wxEXPAND, 5 );
+	bSizer167->Add( sbSizer49, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizer50;
 	sbSizer50 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Tools") ), wxVERTICAL );
@@ -3619,7 +3628,7 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	sbSizer50->Add( m_button67, 0, wxALL, 5 );
 
 
-	bSizer167->Add( sbSizer50, 1, wxEXPAND, 5 );
+	bSizer167->Add( sbSizer50, 0, wxALL|wxEXPAND, 5 );
 
 
 	bSizer166->Add( bSizer167, 1, wxALL|wxEXPAND, 5 );
@@ -3636,6 +3645,9 @@ VoiceDialogBase::VoiceDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	TrainModelButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	StartSafeModeButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartSafeModeButtonClick ), NULL, this );
 	StartStopListeningButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
+	ConvertButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnConvertButtonClick ), NULL, this );
+	ShowVisual
+	->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnShowVisualCheckBoxCheck ), NULL, this );
 	m_button67->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 }
 
@@ -3647,6 +3659,9 @@ VoiceDialogBase::~VoiceDialogBase()
 	TrainModelButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnTrainModelButtonClick ), NULL, this );
 	StartSafeModeButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartSafeModeButtonClick ), NULL, this );
 	StartStopListeningButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnStartModelButtonClick ), NULL, this );
+	ConvertButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnConvertButtonClick ), NULL, this );
+	ShowVisual
+	->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnShowVisualCheckBoxCheck ), NULL, this );
 	m_button67->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VoiceDialogBase::OnPurgeFilesButtonClick ), NULL, this );
 
 }

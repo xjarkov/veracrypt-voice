@@ -26,7 +26,6 @@
 #include "Main/Main.h"
 #include "Main/Resources.h"
 #include "Main/Application.h"
-#include "Main/UserInterface.h"
 #include "Main/GraphicUserInterface.h"
 #include "Main/VolumeHistory.h"
 #include "Main/Xml.h"
@@ -620,6 +619,8 @@ namespace VeraCrypt
             std::getline(listenerOutput, output);
             if (!output.compare("activated")) {
                 CallAfter([=](){Gui->DismountAllVolumes();});
+            } else {
+                std::cout << output << std::endl;
             }
         }
     }
