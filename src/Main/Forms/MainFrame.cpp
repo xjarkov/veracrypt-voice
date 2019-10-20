@@ -26,6 +26,7 @@
 #include "Main/Main.h"
 #include "Main/Resources.h"
 #include "Main/Application.h"
+#include "Main/UserInterface.h"
 #include "Main/GraphicUserInterface.h"
 #include "Main/VolumeHistory.h"
 #include "Main/Xml.h"
@@ -103,7 +104,7 @@ namespace VeraCrypt
 		Connect( wxID_ANY, wxEVT_COMMAND_PREF_UPDATED, wxCommandEventHandler( MainFrame::OnPreferencesUpdated ) );
 		Connect( wxID_ANY, wxEVT_COMMAND_OPEN_VOLUME_REQUEST, wxCommandEventHandler( MainFrame::OnOpenVolumeSystemRequest ) );
 
-        //CreateListenerHandler();
+        CreateListenerHandler();
 	}
 
 	MainFrame::~MainFrame ()
@@ -608,18 +609,17 @@ namespace VeraCrypt
 
     void MainFrame::CreateListenerHandler()
     {
-        auto a = std::async(std::launch::async, &MainFrame::listenerHandler, this);
+        boost::thread t(&MainFrame::listenerHandler, this);
+        t.detach();
     }
 
     void MainFrame::listenerHandler()
     {
         std::string output;
         while (1) {
-            std::cout << "Getline" << std::endl;
             std::getline(listenerOutput, output);
-            std::cout << output << std::endl;
             if (!output.compare("activated")) {
-                Gui->DismountAllVolumes();
+                CallAfter([=](){Gui->DismountAllVolumes();});
             }
         }
     }
@@ -809,7 +809,7 @@ namespace VeraCrypt
 
 	void MainFrame::OnVoiceDismountMenuItemSelected (wxCommandEvent& event)
 	{
-        VoiceDialog dialog(this, listenerInput, listenerOutput, isNormalListenerRunning, isSafeListenerRunning);
+        VoiceDialog dialog(this, listenerInput, listenerOutput, isNormalListenerRunning, isSafeListenerRunning, listener);
 		dialog.ShowModal();
 	}
 

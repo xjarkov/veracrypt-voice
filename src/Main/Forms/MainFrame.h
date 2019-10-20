@@ -197,13 +197,15 @@ namespace VeraCrypt
 
         boost::process::ipstream listenerOutput;
         boost::process::opstream listenerInput;
+//        std::unique_ptr<boost::process::child> listener;
         std::unique_ptr<boost::process::child> listener = std::make_unique<boost::process::child>(
-                    "python3 ./Precise/listen.py model.net",
+                    "python3 ./Precise/listen.py model_ahoj.pb",
                     boost::process::std_out > listenerOutput,
                     boost::process::std_in < listenerInput);
 
         bool isNormalListenerRunning = false;
         bool isSafeListenerRunning = false;
+        int activateCount = 0;
 	};
 }
 

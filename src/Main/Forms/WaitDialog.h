@@ -75,7 +75,7 @@ namespace VeraCrypt
 		virtual void OnWaitDialogInit( wxInitDialogEvent& event )
 		{
 			m_thread->Run();
-			m_timer.Start(100);
+            m_timer.Start(100);
 			m_bThreadRunning = true;
 		}
 

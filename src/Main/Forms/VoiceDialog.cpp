@@ -8,12 +8,13 @@
 
 namespace VeraCrypt
 {
-    VoiceDialog::VoiceDialog (wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool& isSafeListenerRunning)
+    VoiceDialog::VoiceDialog (wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool& isSafeListenerRunning, std::unique_ptr<boost::process::child> &listener)
         : VoiceDialogBase (parent),
         listenerInput(input),
         listenerOutput(output),
         isNormalListenerRunning(isNormalListenerRunning),
-        isSafeListenerRunning(isSafeListenerRunning)
+        isSafeListenerRunning(isSafeListenerRunning),
+        listener(listener)
     {
         if (isNormalListenerRunning) {
             StartStopListeningButton->SetLabel(wxString::FromAscii("Stop listening"));
@@ -90,6 +91,9 @@ namespace VeraCrypt
         }
         isNormalListenerRunning = !isNormalListenerRunning;
         if (isNormalListenerRunning) {
+//            listener = std::make_unique<boost::process::child>(
+//                                            "python3 ./Precise/listen.py model_ahoj.pb",
+//                                            boost::process::std_in < listenerInput);
             StartStopListeningButton->SetLabel(wxString::FromAscii("Stop listening"));
             listenerInput << "start\n";
         } else {

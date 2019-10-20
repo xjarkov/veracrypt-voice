@@ -5,13 +5,14 @@ from os.path import join
 import os
 import sys
 
+from shutil import get_terminal_size
 from prettyparse import create_parser
 from random import randint
 
 from precise.network_runner import Listener
 from runner.precise_runner import PreciseRunner
 from runner.precise_runner.runner import ListenerEngine
-from precise.util import save_audio
+from precise.util import save_audio, buffer_to_audio
 
 usage = '''
     Run a model on microphone audio input
@@ -40,22 +41,30 @@ def main():
     os.chdir(os.getcwd() + "/Precise")
 
     def on_activation():
-        print("activated")
-        if args.save_dir:
-            global chunk_num
-            nm = join(args.save_dir, args.save_prefix + session_id + '.' + str(chunk_num) + '.wav')
-            save_audio(nm, audio_buffer)
-            print()
-            print('Saved to ' + nm + '.')
-            chunk_num += 1
+        print("activated\n", flush=True)
+
+    def on_prediction(conf):
+        max_width = 80
+        width = min(get_terminal_size()[0], max_width)
+        units = int(round(conf * width))
+        bar = 'X' * units + '-' * (width - units)
+        cutoff = round((1.0 - args.sensitivity) * width)
+        print(bar[:cutoff] + bar[cutoff:].replace('X', 'x'))
+
+    def get_prediction(chunk):
+        nonlocal audio_buffer
+        audio = buffer_to_audio(chunk)
+        audio_buffer = np.concatenate((audio_buffer[len(audio):], audio))
+        return listener.update(chunk)
 
     while True:
         line = sys.stdin.readline().rstrip()
         if (line == "start"):
-            listener = Listener("model.net", 2048)
+            listener = Listener(args.model, args.chunk_size)
             audio_buffer = np.zeros(listener.pr.buffer_samples, dtype=float)
-            engine = ListenerEngine(listener, 2048)
-            runner = PreciseRunner(engine, 3, sensitivity = 0.5, on_activation = on_activation)
+            engine = ListenerEngine(listener, args.chunk_size)
+            engine.get_prediction = get_prediction;
+            runner = PreciseRunner(engine, args.trigger_level, sensitivity = args.sensitivity, on_activation = on_activation)
             runner.start()
         elif (line == "stop"):
             runner.stop()

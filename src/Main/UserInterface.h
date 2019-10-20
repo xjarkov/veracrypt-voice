@@ -111,7 +111,7 @@ namespace VeraCrypt
 		UserInterfaceType::Enum InterfaceType;
 
 	private:
-		UserInterface (const UserInterface &);
+        UserInterface (const UserInterface &);
 		UserInterface &operator= (const UserInterface &);
 	};
 }

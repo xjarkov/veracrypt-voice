@@ -13,7 +13,7 @@ namespace VeraCrypt
 	class VoiceDialog : public VoiceDialogBase
 	{
 	public:
-        VoiceDialog(wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool &isSafeListenerRunning);
+        VoiceDialog(wxWindow *parent, boost::process::opstream &input, boost::process::ipstream &output, bool &isNormalListenerRunning, bool &isSafeListenerRunning, std::unique_ptr<boost::process::child> &listener);
 
     protected:
         void OnWakeRecordButtonClick(wxCommandEvent& event);
@@ -34,6 +34,7 @@ namespace VeraCrypt
         boost::process::ipstream &listenerOutput;
         bool &isNormalListenerRunning;
         bool &isSafeListenerRunning;
+        std::unique_ptr<boost::process::child> &listener;
 	};
 }
 #endif // __VoiceDialog__
